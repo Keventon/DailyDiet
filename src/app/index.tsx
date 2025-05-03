@@ -1,15 +1,29 @@
 import { colors } from "@/types/colors";
-import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  SectionList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import Logo from "@/assets/logo.svg";
 import Open from "@/assets/open.svg";
 import { fontFamily } from "@/types/fontFamily";
 import { Button } from "@/components/Button";
+import { Meal } from "@/components/Meal";
+import { Statistic } from "@/components/Statistic";
 
 export default function Home() {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={colors.white}
+        translucent
+      />
       <View style={styles.header}>
         <Logo width={82} height={37} />
         <Image
@@ -18,23 +32,32 @@ export default function Home() {
         />
       </View>
 
-      <View style={styles.contentStatistics}>
-        <View style={styles.iconStatistics}>
-          <Open width={24} height={24} />
-        </View>
-        <View style={styles.contentPercent}>
-          <Text style={styles.titleStatistics}>90,86%</Text>
-          <Text style={styles.subtitleStatistics}>
-            das refeições dentro da dieta
-          </Text>
-        </View>
-      </View>
+      <Statistic percent={90.86} />
 
       <Text style={styles.title}>Refeições</Text>
 
       <View style={styles.contentButton}>
-        <Button title="Nova refeição" />
+        <Button title="Nova refeição" iconVisible />
       </View>
+
+      <View style={{ marginTop: 32 }}>
+        <Meal hour="20:00" nameMeal="X-tudo" status={false} />
+        <Meal hour="16:00" nameMeal="Whey protein com leite" status />
+        <Meal hour="12:30" nameMeal="Salada cesar com frango na chapa" status />
+      </View>
+
+      {/* <SectionList
+        sections={DATA}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Text style={styles.title}>{item}</Text>
+          </View>
+        )}
+        renderSectionHeader={({ section: { date } }) => (
+          <Text style={styles.headerSectionList}>{date}</Text>
+        )}
+      /> */}
     </View>
   );
 }
@@ -42,7 +65,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.gray6,
+    backgroundColor: colors.white,
   },
   header: {
     marginTop: 60,
@@ -66,34 +89,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.gray2,
   },
-  contentStatistics: {
-    height: 102,
-    marginLeft: 24,
-    marginRight: 24,
-    borderRadius: 8,
-    backgroundColor: colors.greenLight,
-    marginTop: 24,
-  },
-  iconStatistics: {
-    alignItems: "flex-end",
-    marginRight: 12,
-    marginTop: 8,
-  },
-  contentPercent: {
-    marginTop: -12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleStatistics: {
-    fontSize: 32,
-    color: colors.gray1,
-    fontFamily: fontFamily.bold,
-  },
-  subtitleStatistics: {
-    fontSize: 14,
-    color: colors.gray2,
-    fontFamily: fontFamily.regular,
-  },
   title: {
     fontFamily: fontFamily.regular,
     color: colors.gray1,
@@ -105,5 +100,17 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginLeft: 24,
     marginRight: 24,
+  },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+  },
+  headerSectionList: {
+    fontSize: 32,
+    backgroundColor: "#fff",
+  },
+  titleSectionList: {
+    fontSize: 24,
   },
 });

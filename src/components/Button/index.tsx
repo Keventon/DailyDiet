@@ -10,13 +10,16 @@ import { styles } from "./styles";
 
 type Props = TouchableOpacityProps & {
   title: string;
+  iconVisible?: boolean;
 };
 
-export function Button({ title, ...rest }: Props) {
+export function Button({ title, iconVisible, ...rest }: Props) {
   return (
     <TouchableOpacity activeOpacity={0.7} {...rest} style={styles.container}>
       <View style={styles.content}>
-        <MaterialIcons name="add" size={24} color={colors.white} />
+        {iconVisible && (
+          <MaterialIcons name="add" size={24} color={colors.white} />
+        )}
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>
