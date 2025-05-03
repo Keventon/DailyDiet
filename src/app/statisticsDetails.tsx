@@ -1,10 +1,9 @@
 import { colors } from "@/types/colors";
 import { StatusBar, StyleSheet, Text, View } from "react-native";
-import Back from "@/assets/back.svg";
-import { router } from "expo-router";
 import { Header } from "@/components/Header";
 import { sizes } from "@/types/sizes";
 import { fontFamily } from "@/types/fontFamily";
+import { StatisticRectangule } from "@/components/StatisticRectangule";
 
 export default function StatisticsDetails() {
   return (
@@ -15,10 +14,34 @@ export default function StatisticsDetails() {
         translucent
       />
 
-      <Header percent={90.86} />
+      <Header percent={90.86} status />
 
       <View style={styles.content}>
         <Text style={styles.title}>Estatísticas gerais</Text>
+      </View>
+
+      <View style={styles.statistics}>
+        <StatisticRectangule
+          quantityMealsDiet={22}
+          subtitle="melhor sequência de pratos dentro da dieta"
+        />
+        <StatisticRectangule
+          quantityMealsDiet={109}
+          subtitle="refeições registadas"
+        />
+      </View>
+
+      <View style={styles.statisticsRow}>
+        <StatisticRectangule
+          quantityMealsDiet={99}
+          subtitle="refeições dentro da dieta"
+          backgroundColor={colors.greenLight}
+        />
+        <StatisticRectangule
+          quantityMealsDiet={10}
+          subtitle="refeições fora da dieta"
+          backgroundColor={colors.redLight}
+        />
       </View>
     </View>
   );
@@ -30,7 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    flex: 1,
     backgroundColor: colors.white,
     marginTop: -20,
     borderTopLeftRadius: 20,
@@ -42,5 +64,16 @@ const styles = StyleSheet.create({
     fontSize: sizes.TITLE.XS,
     color: colors.gray1,
     fontFamily: fontFamily.bold,
+  },
+  statistics: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+  },
+  statisticsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 24,
+    marginRight: 24,
   },
 });
