@@ -15,8 +15,13 @@ import { fontFamily } from "@/types/fontFamily";
 import { Button } from "@/components/Button";
 import { Meal } from "@/components/Meal";
 import { Statistic } from "@/components/Statistic";
+import { router } from "expo-router";
 
 export default function Home() {
+  function handleScreenStatisticsDetails() {
+    router.navigate("/statisticsDetails");
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -32,7 +37,7 @@ export default function Home() {
         />
       </View>
 
-      <Statistic percent={90.86} />
+      <Statistic percent={90.86} onPress={handleScreenStatisticsDetails} />
 
       <Text style={styles.title}>Refeições</Text>
 

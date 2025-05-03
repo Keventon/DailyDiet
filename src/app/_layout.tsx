@@ -17,6 +17,7 @@ export default function Layout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
       <Stack.Screen name="statistics" />
+      <Stack.Screen name="statisticsDetails" />
     </Stack>
   );
 }
