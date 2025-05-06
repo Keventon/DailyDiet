@@ -5,36 +5,66 @@ import Back from "@/assets/back.svg";
 import BackRed from "@/assets/backRed.svg";
 import { toPercentage } from "@/utils/toPercentage";
 import { colors } from "@/types/colors";
+import { AntDesign } from "@expo/vector-icons";
 
 type Props = {
-  percent: number;
-  status: boolean;
+  percent?: number;
+  backgroundColor: string;
+  backgroundIcon: string;
+  isPercent?: boolean;
+  height?: number;
+  title?: string;
 };
 
-export function Header({ percent, status }: Props) {
+export function Header({
+  percent,
+  backgroundColor,
+  backgroundIcon,
+  isPercent,
+  height,
+  title,
+}: Props) {
   return (
-    <View
-      style={[
-        styles.container,
-        status
-          ? { backgroundColor: colors.greenLight }
-          : {
-              backgroundColor: colors.redLight,
-            },
-      ]}
-    >
-      {status ? (
-        <Back style={styles.iconBack} onPress={() => router.back()} />
+    <>
+      {isPercent && percent ? (
+        <View
+          style={[
+            styles.container,
+            { backgroundColor: backgroundColor, height: height },
+          ]}
+        >
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color={backgroundIcon}
+            style={styles.iconBack}
+            onPress={() => router.back()}
+          />
+          <View style={styles.contentPercent}>
+            <Text style={styles.titleStatistics}>{toPercentage(percent)}</Text>
+            <Text style={styles.subtitleStatistics}>
+              das refeições dentro da dieta
+            </Text>
+          </View>
+        </View>
       ) : (
-        <BackRed style={styles.iconBack} onPress={() => router.back()} />
+        <View
+          style={[
+            styles.containerTitle,
+            { backgroundColor: backgroundColor, height: height },
+          ]}
+        >
+          <AntDesign
+            name="arrowleft"
+            size={24}
+            color={backgroundIcon}
+            style={styles.iconBackTitle}
+            onPress={() => router.back()}
+          />
+          <Text style={styles.title}>{title}</Text>
+          <View style={{ width: 24 }} />
+        </View>
       )}
-
-      <View style={styles.contentPercent}>
-        <Text style={styles.titleStatistics}>{toPercentage(percent)}</Text>
-        <Text style={styles.subtitleStatistics}>
-          das refeições dentro da dieta
-        </Text>
-      </View>
-    </View>
+    </>
   );
 }

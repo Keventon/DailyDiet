@@ -42,7 +42,11 @@ export default function Home() {
       <Text style={styles.title}>Refeições</Text>
 
       <View style={styles.contentButton}>
-        <Button title="Nova refeição" iconVisible />
+        <Button
+          title="Nova refeição"
+          iconVisible
+          onPress={() => router.navigate("/newMeal")}
+        />
       </View>
 
       <View style={{ marginTop: 32 }}>

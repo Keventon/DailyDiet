@@ -14,7 +14,13 @@ export default function StatisticsDetails() {
         translucent
       />
 
-      <Header percent={90.86} status />
+      <Header
+        percent={90.86}
+        backgroundColor={colors.greenLight}
+        backgroundIcon={colors.greenDark}
+        isPercent
+        height={188}
+      />
 
       <View style={styles.content}>
         <Text style={styles.title}>Estatísticas gerais</Text>
