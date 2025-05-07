@@ -5,18 +5,30 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     height: 50,
-    backgroundColor: colors.gray2,
-    borderRadius: 6,
-  },
-  content: {
     flexDirection: "row",
+    gap: 8,
+    borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
-    gap: 8,
   },
+  containerSecondary: {
+    height: 50,
+    flexDirection: "row",
+    gap: 8,
+    borderColor: colors.gray1,
+    borderWidth: 1,
+    borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  content: {},
   title: {
     color: colors.white,
+    fontFamily: fontFamily.bold,
+    fontSize: 14,
+  },
+  titleSecondary: {
+    color: colors.gray1,
     fontFamily: fontFamily.bold,
     fontSize: 14,
   },

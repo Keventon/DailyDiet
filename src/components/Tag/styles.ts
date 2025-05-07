@@ -5,23 +5,25 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    height: 89,
-    borderRadius: 8,
+    width: 144,
     backgroundColor: colors.gray6,
-    marginBottom: 16,
-    justifyContent: "center",
-    padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    borderRadius: 99,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
+  icon: {
+    width: 8,
+    height: 8,
+    borderRadius: 99,
   },
   title: {
-    fontSize: sizes.TITLE.M,
     color: colors.gray1,
-    textAlign: "center",
-    fontFamily: fontFamily.bold,
-  },
-  subtitle: {
-    fontSize: sizes.BODY.S,
-    color: colors.gray2,
     fontFamily: fontFamily.regular,
-    textAlign: "center",
+    fontSize: sizes.BODY.S,
   },
 });

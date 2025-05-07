@@ -112,7 +112,11 @@ export default function NewMeal() {
       </View>
 
       <View style={styles.footer}>
-        <Button title="Cadastrar refeição" onPress={handleOpenModal} />
+        <Button
+          title="Cadastrar refeição"
+          onPress={handleOpenModal}
+          type="PRIMARY"
+        />
       </View>
 
       {modalConfig && (

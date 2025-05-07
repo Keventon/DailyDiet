@@ -16,6 +16,7 @@ import { Button } from "@/components/Button";
 import { Meal } from "@/components/Meal";
 import { Statistic } from "@/components/Statistic";
 import { router } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Home() {
   function handleScreenStatisticsDetails() {
@@ -45,12 +46,19 @@ export default function Home() {
         <Button
           title="Nova refeição"
           iconVisible
+          type="PRIMARY"
+          icon={<MaterialIcons name="add" size={18} color={colors.white} />}
           onPress={() => router.navigate("/newMeal")}
         />
       </View>
 
       <View style={{ marginTop: 32 }}>
-        <Meal hour="20:00" nameMeal="X-tudo" status={false} />
+        <Meal
+          hour="20:00"
+          nameMeal="X-tudo"
+          status={false}
+          onPress={() => router.navigate("/mealDetails")}
+        />
         <Meal hour="16:00" nameMeal="Whey protein com leite" status />
         <Meal hour="12:30" nameMeal="Salada cesar com frango na chapa" status />
       </View>

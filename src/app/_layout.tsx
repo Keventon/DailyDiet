@@ -19,6 +19,7 @@ export default function Layout() {
       <Stack.Screen name="statistics" />
       <Stack.Screen name="statisticsDetails" />
       <Stack.Screen name="newMeal" />
+      <Stack.Screen name="mealDetails" />
     </Stack>
   );
 }

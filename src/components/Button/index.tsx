@@ -1,5 +1,4 @@
 import { colors } from "@/types/colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import {
   Text,
   TouchableOpacity,
@@ -11,17 +10,39 @@ import { styles } from "./styles";
 type Props = TouchableOpacityProps & {
   title: string;
   iconVisible?: boolean;
+  icon?: React.ReactNode;
+  backgroundColor?: string;
+  type: "PRIMARY" | "SECONDARY";
 };
 
-export function Button({ title, iconVisible, ...rest }: Props) {
-  return (
-    <TouchableOpacity activeOpacity={0.7} {...rest} style={styles.container}>
-      <View style={styles.content}>
-        {iconVisible && (
-          <MaterialIcons name="add" size={24} color={colors.white} />
-        )}
-        <Text style={styles.title}>{title}</Text>
-      </View>
+export function Button({
+  title,
+  backgroundColor,
+  iconVisible = false,
+  icon,
+  type,
+  ...rest
+}: Props) {
+  return type === "PRIMARY" ? (
+    <TouchableOpacity
+      activeOpacity={0.9}
+      style={[
+        styles.container,
+        { backgroundColor: backgroundColor ? backgroundColor : colors.gray2 },
+      ]}
+      {...rest}
+    >
+      {iconVisible && icon}
+      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
+  ) : (
+    <TouchableOpacity
+      activeOpacity={0.6}
+      style={[styles.containerSecondary]}
+      {...rest}
+    >
+      {iconVisible && icon}
+      <Text style={styles.titleSecondary}>{title}</Text>
     </TouchableOpacity>
   );
 }

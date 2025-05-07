@@ -31,7 +31,11 @@ export function CustomModal({
         </View>
 
         <View style={styles.button}>
-          <Button title="Ir para a página inicial" onPress={onPress} />
+          <Button
+            title="Ir para a página inicial"
+            onPress={onPress}
+            type="PRIMARY"
+          />
         </View>
       </View>
     </Modal>
