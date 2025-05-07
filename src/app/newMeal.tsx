@@ -1,4 +1,5 @@
 import { Button } from "@/components/Button";
+import { CustomModal } from "@/components/CustomModal";
 import { Header } from "@/components/Header";
 import { Input } from "@/components/Input";
 import { Selection } from "@/components/Selection";
@@ -7,15 +8,49 @@ import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
 import { useState } from "react";
 import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+
+import Ilustration from "@/assets/illustration.svg";
+import IlustrationTwo from "@/assets/illustrationTwo.svg";
 
 export default function NewMeal() {
   const [selectedOption, setSelectedOption] = useState<"YES" | "NO" | null>(
     null
   );
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   function handleSelect(option: "YES" | "NO") {
     setSelectedOption(option);
   }
+
+  function handleOpenModal() {
+    if (selectedOption) {
+      setIsModalVisible(true);
+    }
+  }
+
+  function handleNavigateHome() {
+    setIsModalVisible(false);
+    router.navigate("/");
+  }
+
+  const modalConfig =
+    selectedOption === "YES"
+      ? {
+          title: "Continue assim!",
+          subtitle: "Você continua dentro da dieta. Muito bem!",
+          svgComponent: <Ilustration />,
+          colorTitle: colors.greenDark,
+        }
+      : selectedOption === "NO"
+      ? {
+          title: "Que pena!",
+          subtitle:
+            "Você saiu da dieta dessa vez, mas continue se esforçando e não desista!",
+          svgComponent: <IlustrationTwo />,
+          colorTitle: colors.redDark,
+        }
+      : null;
 
   return (
     <View style={styles.container}>
@@ -77,8 +112,19 @@ export default function NewMeal() {
       </View>
 
       <View style={styles.footer}>
-        <Button title="Cadastrar refeição" />
+        <Button title="Cadastrar refeição" onPress={handleOpenModal} />
       </View>
+
+      {modalConfig && (
+        <CustomModal
+          visible={isModalVisible}
+          onPress={handleNavigateHome}
+          title={modalConfig.title}
+          subtitle={modalConfig.subtitle}
+          svgComponent={modalConfig.svgComponent}
+          colorTitle={modalConfig.colorTitle}
+        />
+      )}
     </View>
   );
 }
@@ -90,7 +136,7 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: colors.white,
-    marginTop: -20,
+    marginTop: -16,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
