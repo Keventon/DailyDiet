@@ -5,15 +5,12 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginLeft: 24,
-    marginRight: 24,
     marginBottom: 24,
   },
   input: {
-    height: 50,
+    height: 48,
     fontFamily: fontFamily.regular,
-    fontSize: sizes.BODY.S,
+    fontSize: sizes.BODY.M,
     borderRadius: 6,
     borderColor: colors.gray5,
     borderWidth: 1,
