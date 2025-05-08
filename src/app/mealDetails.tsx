@@ -1,13 +1,18 @@
 import { Button } from "@/components/Button";
+import { DeleteConfirmationModal } from "@/components/DelateConfirmationModal";
 import { Header } from "@/components/Header";
 import { Tag } from "@/components/Tag";
 import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
 import { AntDesign } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function MealDetails() {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <Header
@@ -36,16 +41,22 @@ export default function MealDetails() {
             icon={<AntDesign name="edit" size={18} color={colors.white} />}
             iconVisible
             type="PRIMARY"
-            onPress={() => {}}
+            onPress={() => router.navigate("/mealEdit")}
           />
           <Button
             title="Excluir refeição"
             type="SECONDARY"
             icon={<AntDesign name="delete" size={18} color={colors.gray1} />}
             iconVisible
-            onPress={() => {}}
+            onPress={() => setIsModalVisible(true)}
           />
         </View>
+        <DeleteConfirmationModal
+          visible={isModalVisible}
+          onConfirm={() => setIsModalVisible(false)}
+          title="Deseja realmente excluir o registro da refeição?"
+          onCancel={() => setIsModalVisible(false)}
+        />
       </View>
     </View>
   );

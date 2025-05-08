@@ -1,10 +1,4 @@
-import { colors } from "@/types/colors";
-import {
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-} from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { styles } from "./styles";
 
 type Props = TouchableOpacityProps & {
@@ -24,14 +18,7 @@ export function Button({
   ...rest
 }: Props) {
   return type === "PRIMARY" ? (
-    <TouchableOpacity
-      activeOpacity={0.9}
-      style={[
-        styles.container,
-        { backgroundColor: backgroundColor ? backgroundColor : colors.gray2 },
-      ]}
-      {...rest}
-    >
+    <TouchableOpacity activeOpacity={0.9} style={styles.container} {...rest}>
       {iconVisible && icon}
       <Text style={styles.title}>{title}</Text>
     </TouchableOpacity>
