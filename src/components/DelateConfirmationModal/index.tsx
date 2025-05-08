@@ -29,21 +29,23 @@ export function DeleteConfirmationModal({
         <View style={styles.container}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.buttonContainer}>
-            <Button
-              type="SECONDARY"
-              title="Cancelar"
-              iconVisible={false}
-              backgroundColor={colors.gray2}
-              style={styles.cancelButton}
-              onPress={onCancel}
-            />
-            <Button
-              type="PRIMARY"
-              title="Confirmar"
-              iconVisible={false}
-              style={styles.confirmButton}
-              onPress={onConfirm}
-            />
+            <View style={styles.button}>
+              <Button
+                type="SECONDARY"
+                title="Cancelar"
+                iconVisible={false}
+                backgroundColor={colors.gray2}
+                onPress={onCancel}
+              />
+            </View>
+            <View style={styles.button}>
+              <Button
+                type="PRIMARY"
+                title="Sim, excluir"
+                iconVisible={false}
+                onPress={onConfirm}
+              />
+            </View>
           </View>
         </View>
       </View>

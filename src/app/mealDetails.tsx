@@ -8,13 +8,17 @@ import { sizes } from "@/types/sizes";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 
 export default function MealDetails() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        backgroundColor={isModalVisible ? "rgba(0,0,0,0.5)" : colors.greenLight}
+        barStyle="dark-content"
+      />
       <Header
         backgroundColor={colors.greenLight}
         backgroundIcon={colors.greenDark}

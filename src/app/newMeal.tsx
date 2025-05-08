@@ -55,7 +55,7 @@ export default function NewMeal() {
   return (
     <View style={styles.container}>
       <StatusBar
-        backgroundColor={colors.gray5}
+        backgroundColor={isModalVisible ? colors.white : colors.gray5}
         barStyle="dark-content"
         translucent
       />
