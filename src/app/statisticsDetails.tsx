@@ -24,30 +24,34 @@ export default function StatisticsDetails() {
 
       <View style={styles.content}>
         <Text style={styles.title}>Estatísticas gerais</Text>
-      </View>
 
-      <View style={styles.statistics}>
-        <StatisticRectangule
-          quantityMealsDiet={22}
-          subtitle="melhor sequência de pratos dentro da dieta"
-        />
-        <StatisticRectangule
-          quantityMealsDiet={109}
-          subtitle="refeições registadas"
-        />
-      </View>
+        <View style={styles.statistics}>
+          <StatisticRectangule
+            quantityMealsDiet={22}
+            subtitle="melhor sequência de pratos dentro da dieta"
+          />
+          <StatisticRectangule
+            quantityMealsDiet={109}
+            subtitle="refeições registadas"
+          />
+        </View>
 
-      <View style={styles.statisticsRow}>
-        <StatisticRectangule
-          quantityMealsDiet={99}
-          subtitle="refeições dentro da dieta"
-          backgroundColor={colors.greenLight}
-        />
-        <StatisticRectangule
-          quantityMealsDiet={10}
-          subtitle="refeições fora da dieta"
-          backgroundColor={colors.redLight}
-        />
+        <View style={styles.statisticsRow}>
+          <View style={{ flex: 1 }}>
+            <StatisticRectangule
+              quantityMealsDiet={99}
+              subtitle="refeições dentro da dieta"
+              backgroundColor={colors.greenLight}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <StatisticRectangule
+              quantityMealsDiet={11}
+              subtitle="refeições fora da dieta"
+              backgroundColor={colors.redLight}
+            />
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -63,9 +67,9 @@ const styles = StyleSheet.create({
     marginTop: -20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    alignItems: "center",
   },
   title: {
+    textAlign: "center",
     marginTop: 32,
     fontSize: sizes.TITLE.XS,
     color: colors.gray1,
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
   },
   statisticsRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: 8,
     marginLeft: 24,
     marginRight: 24,
   },

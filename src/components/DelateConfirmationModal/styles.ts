@@ -22,7 +22,6 @@ export const styles = StyleSheet.create({
     marginTop: 24,
   },
   title: {
-    paddingBottom: 24,
     fontSize: sizes.TITLE.S,
     color: colors.gray2,
     textAlign: "center",

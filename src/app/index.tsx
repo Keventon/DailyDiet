@@ -1,16 +1,7 @@
 import { colors } from "@/types/colors";
-import {
-  Image,
-  SectionList,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
 
 import Logo from "@/assets/logo.svg";
-import Open from "@/assets/open.svg";
 import { fontFamily } from "@/types/fontFamily";
 import { Button } from "@/components/Button";
 import { Meal } from "@/components/Meal";
