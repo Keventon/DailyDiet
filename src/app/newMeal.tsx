@@ -7,25 +7,51 @@ import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
 import { useState } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { Alert, StatusBar, StyleSheet, Text, View } from "react-native";
 import { router } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
 import IlustrationTwo from "@/assets/illustrationTwo.svg";
+import { useMealDatabase } from "@/database/meal/useMealDatabase";
 
 export default function NewMeal() {
   const [selectedOption, setSelectedOption] = useState<"YES" | "NO" | null>(
     null
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [hour, setHour] = useState("");
+
+  const database = useMealDatabase();
 
   function handleSelect(option: "YES" | "NO") {
     setSelectedOption(option);
   }
 
-  function handleOpenModal() {
-    if (selectedOption) {
-      setIsModalVisible(true);
+  async function handleSaveMealDatabase() {
+    if (!name || !description || !date || !hour || !selectedOption) {
+      return Alert.alert("Atenção", "Preencha todos os campos.");
+    }
+
+    const status = selectedOption === "YES" ? 1 : 0;
+
+    try {
+      const response = await database.create({
+        name,
+        description,
+        date,
+        hour,
+        status,
+      });
+
+      if (response.isSuccessful) {
+        setIsModalVisible(true);
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível salvar refeição, tente novamente");
+      console.log(error);
     }
   }
 
@@ -70,20 +96,37 @@ export default function NewMeal() {
 
       <View style={styles.content}>
         <View style={styles.form}>
-          <Input title="Nome" returnKeyType="next" />
+          <Input
+            title="Nome"
+            returnKeyType="next"
+            onChangeText={setName}
+            value={name}
+          />
           <Input
             title="Descrição"
             height={120}
             returnKeyType="next"
             multiline
+            onChangeText={setDescription}
+            value={description}
           />
 
           <View style={styles.dateTimeRow}>
             <View style={{ flex: 1, marginRight: 8 }}>
-              <Input title="Data" returnKeyType="next" />
+              <Input
+                title="Data"
+                returnKeyType="next"
+                onChangeText={setDate}
+                value={date}
+              />
             </View>
             <View style={{ flex: 1, marginLeft: 8 }}>
-              <Input title="Hora" returnKeyType="done" />
+              <Input
+                title="Hora"
+                returnKeyType="done"
+                onChangeText={setHour}
+                value={hour}
+              />
             </View>
           </View>
         </View>
@@ -114,7 +157,7 @@ export default function NewMeal() {
       <View style={styles.footer}>
         <Button
           title="Cadastrar refeição"
-          onPress={handleOpenModal}
+          onPress={handleSaveMealDatabase}
           type="PRIMARY"
         />
       </View>

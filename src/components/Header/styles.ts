@@ -40,7 +40,6 @@ export const styles = StyleSheet.create({
     marginRight: 24,
   },
   containerTitle: {
-    paddingTop: 24,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
