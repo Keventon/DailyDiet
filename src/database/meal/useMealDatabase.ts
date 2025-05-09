@@ -1,6 +1,6 @@
 import { useSQLiteContext } from "expo-sqlite";
 
-export type Meal = {
+export type MealDatabase = {
   id: number;
   name: string;
   description: string;
@@ -12,7 +12,7 @@ export type Meal = {
 export function useMealDatabase() {
   const database = useSQLiteContext();
 
-  async function create(data: Omit<Meal, "id">) {
+  async function create(data: Omit<MealDatabase, "id">) {
     const statement = await database.prepareAsync(
       "INSERT INTO meals (name, description, date, hour, status) VALUES ($name, $description, $date, $hour, $status)"
     );
@@ -28,10 +28,55 @@ export function useMealDatabase() {
       const insertedRowId = result.lastInsertRowId.toLocaleString();
       return { isSuccessful: true, insertedRowId };
     } catch (error) {
-      return { isSuccessful: false, error: error };
+      return { isSuccessful: false, error };
     } finally {
       await statement.finalizeAsync();
     }
   }
-  return { create };
+
+  async function getAll(): Promise<{
+    isSuccessful: boolean;
+    meals: MealDatabase[];
+    error?: unknown;
+  }> {
+    try {
+      const query = "SELECT * FROM meals";
+      const meals = await database.getAllAsync<MealDatabase>(query);
+      return { isSuccessful: true, meals };
+    } catch (error) {
+      return { isSuccessful: false, meals: [], error };
+    }
+  }
+
+  async function getDietPercentage(): Promise<{
+    isSuccessful: boolean;
+    percentage: number;
+    error?: unknown;
+  }> {
+    try {
+      const result = await getAll();
+      if (!result.isSuccessful) {
+        return { isSuccessful: false, percentage: 0, error: result.error };
+      }
+
+      const meals = result.meals;
+      if (meals.length === 0) {
+        return { isSuccessful: true, percentage: 0 };
+      }
+
+      const dietMeals = meals.filter((meal) => meal.status === 1).length;
+      const percentage = (dietMeals / meals.length) * 100;
+
+      const formattedPercentage =
+        Math.floor(percentage) === percentage
+          ? Math.floor(percentage)
+          : Number(percentage.toFixed(2));
+
+      return { isSuccessful: true, percentage: formattedPercentage };
+    } catch (error) {
+      return { isSuccessful: false, percentage: 0, error };
+    }
+  }
+
+  return { create, getAll, getDietPercentage };
 }

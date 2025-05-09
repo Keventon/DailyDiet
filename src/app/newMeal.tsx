@@ -13,6 +13,7 @@ import { router } from "expo-router";
 import Ilustration from "@/assets/illustration.svg";
 import IlustrationTwo from "@/assets/illustrationTwo.svg";
 import { useMealDatabase } from "@/database/meal/useMealDatabase";
+import { getCurrentDate } from "@/utils/getCurrentDate";
 
 export default function NewMeal() {
   const [selectedOption, setSelectedOption] = useState<"YES" | "NO" | null>(
@@ -21,7 +22,7 @@ export default function NewMeal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(getCurrentDate());
   const [hour, setHour] = useState("");
 
   const database = useMealDatabase();
