@@ -109,7 +109,9 @@ export default function MealDetails() {
             icon={<AntDesign name="edit" size={18} color={colors.white} />}
             iconVisible
             type="PRIMARY"
-            // onPress={() => router.navigate(`/mealEdit/${meal.id}`)}
+            onPress={() =>
+              router.navigate({ pathname: "/mealEdit", params: { id } })
+            }
           />
           <Button
             title="Excluir refeição"

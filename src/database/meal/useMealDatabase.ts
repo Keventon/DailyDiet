@@ -136,11 +136,31 @@ export function useMealDatabase() {
     }
   }
 
+  async function update(id: number, data: Omit<MealDatabase, "id">) {
+    try {
+      const statement = await database.prepareAsync(
+        "UPDATE meals SET name = $name, description = $description, date = $date, hour = $hour, status = $status WHERE id = $id"
+      );
+      await statement.executeAsync({
+        $id: id,
+        $name: data.name,
+        $description: data.description,
+        $date: data.date,
+        $hour: data.hour,
+        $status: data.status,
+      });
+      return { isSuccessful: true };
+    } catch (error) {
+      return { isSuccessful: false, error };
+    }
+  }
+
   return {
     create,
     getAll,
     findById,
     deleteById,
+    update,
     getDietPercentage,
     getNoDietPercentage,
   };

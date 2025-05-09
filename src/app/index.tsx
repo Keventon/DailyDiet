@@ -18,6 +18,7 @@ import { Href, router, useFocusEffect } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { MealDatabase, useMealDatabase } from "@/database/meal/useMealDatabase";
+import { Loading } from "@/components/Loading";
 
 type MealSection = {
   date: string;
@@ -29,13 +30,12 @@ export default function Home() {
   const [sections, setSections] = useState<MealSection[]>([]);
   const [dietPercentage, setDietPercentage] = useState<number>(0);
   const [status, setStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
   const database = useMealDatabase();
 
   function handleScreenStatisticsDetails() {
     router.navigate("/statisticsDetails");
   }
-
-  function getPercentage() {}
 
   async function fetchMeals() {
     try {
@@ -91,6 +91,10 @@ export default function Home() {
   useFocusEffect(() => {
     fetchMeals();
   });
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
@@ -156,9 +160,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   header: {
-    marginTop: Platform.OS === "ios" ? 56 : 48,
+    marginTop: 56,
     marginLeft: 24,
-    marginRight: 24,
+    marginRight: 32,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",

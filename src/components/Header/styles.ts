@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     marginRight: 24,
   },
   containerTitle: {
-    marginTop: Platform.OS === "ios" ? 0 : -8,
+    marginTop: Platform.OS === "ios" ? 0 : 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

@@ -6,18 +6,27 @@ import { Selection } from "@/components/Selection";
 import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
-import { useState } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
-import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, StatusBar, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
 import IlustrationTwo from "@/assets/illustrationTwo.svg";
+import { MealDatabase, useMealDatabase } from "@/database/meal/useMealDatabase";
 
 export default function mealEdit() {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const [selectedOption, setSelectedOption] = useState<"YES" | "NO" | null>(
     null
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [meal, setMeal] = useState<MealDatabase | null>(null);
+  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [hour, setHour] = useState("");
+  const database = useMealDatabase();
 
   function handleSelect(option: "YES" | "NO") {
     setSelectedOption(option);
@@ -52,10 +61,68 @@ export default function mealEdit() {
         }
       : null;
 
+  function handleUpdateMealDatabase() {
+    if (!name || !description || !date || !hour || !selectedOption) {
+      return Alert.alert("Atenção", "Preencha todos os campos.");
+    }
+
+    const status = selectedOption === "YES" ? 1 : 0;
+
+    database
+      .update(Number(id), {
+        name,
+        description,
+        date,
+        hour,
+        status,
+      })
+      .then(() => {
+        setIsModalVisible(true);
+      })
+      .catch((error) => {
+        Alert.alert(
+          "Erro",
+          "Não foi possível salvar refeição, tente novamente"
+        );
+        console.log(error);
+      });
+  }
+
+  useEffect(() => {
+    async function fetchMeal() {
+      if (!id) {
+        Alert.alert("Erro", "ID da refeição não fornecido");
+        router.back();
+        return;
+      }
+
+      try {
+        const result = await database.findById(Number(id));
+        if (result.isSuccessful && result.meal) {
+          setMeal(result.meal);
+          selectedOption === null &&
+            setSelectedOption(result.meal.status === 1 ? "YES" : "NO");
+          setName(result.meal.name);
+          setDescription(result.meal.description);
+          setDate(result.meal.date);
+          setHour(result.meal.hour);
+        } else {
+          Alert.alert("Erro", "Refeição não encontrada");
+          router.back();
+        }
+      } catch (error) {
+        Alert.alert("Erro", "Erro ao carregar detalhes da refeição");
+        router.back();
+        console.log(error);
+      }
+    }
+
+    fetchMeal();
+  }, [id]);
   return (
     <View style={styles.container}>
       <StatusBar
-        backgroundColor={colors.gray5}
+        backgroundColor={isModalVisible ? colors.white : colors.gray5}
         barStyle="dark-content"
         translucent
       />
@@ -70,20 +137,37 @@ export default function mealEdit() {
 
       <View style={styles.content}>
         <View style={styles.form}>
-          <Input title="Nome" returnKeyType="next" />
+          <Input
+            title="Nome"
+            returnKeyType="next"
+            value={name}
+            onChangeText={setName}
+          />
           <Input
             title="Descrição"
             height={120}
             returnKeyType="next"
             multiline
+            value={description}
+            onChangeText={setDescription}
           />
 
           <View style={styles.dateTimeRow}>
             <View style={{ flex: 1, marginRight: 8 }}>
-              <Input title="Data" returnKeyType="next" />
+              <Input
+                title="Data"
+                returnKeyType="next"
+                value={date}
+                onChangeText={setDate}
+              />
             </View>
             <View style={{ flex: 1, marginLeft: 8 }}>
-              <Input title="Hora" returnKeyType="done" />
+              <Input
+                title="Hora"
+                returnKeyType="done"
+                value={hour}
+                onChangeText={setHour}
+              />
             </View>
           </View>
         </View>
@@ -114,7 +198,7 @@ export default function mealEdit() {
       <View style={styles.footer}>
         <Button
           title="Salvar alterações"
-          onPress={handleOpenModal}
+          onPress={handleUpdateMealDatabase}
           type="PRIMARY"
         />
       </View>
