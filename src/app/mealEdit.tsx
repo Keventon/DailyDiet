@@ -7,7 +7,16 @@ import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
 import { useEffect, useState } from "react";
-import { Alert, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Pressable,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
@@ -20,12 +29,13 @@ export default function mealEdit() {
     null
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const [meal, setMeal] = useState<MealDatabase | null>(null);
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [hour, setHour] = useState("");
+  const [showHourPicker, setShowHourPicker] = useState(false);
+
   const database = useMealDatabase();
 
   function handleSelect(option: "YES" | "NO") {
@@ -42,24 +52,6 @@ export default function mealEdit() {
     setIsModalVisible(false);
     router.navigate("/");
   }
-
-  const modalConfig =
-    selectedOption === "YES"
-      ? {
-          title: "Continue assim!",
-          subtitle: "Você continua dentro da dieta. Muito bem!",
-          svgComponent: <Ilustration />,
-          colorTitle: colors.greenDark,
-        }
-      : selectedOption === "NO"
-      ? {
-          title: "Que pena!",
-          subtitle:
-            "Você saiu da dieta dessa vez, mas continue se esforçando e não desista!",
-          svgComponent: <IlustrationTwo />,
-          colorTitle: colors.redDark,
-        }
-      : null;
 
   function handleUpdateMealDatabase() {
     if (!name || !description || !date || !hour || !selectedOption) {
@@ -87,6 +79,33 @@ export default function mealEdit() {
         console.log(error);
       });
   }
+
+  function handleTimeChange(event: any, selectedTime?: Date) {
+    setShowHourPicker(Platform.OS === "ios");
+    if (selectedTime) {
+      const hours = selectedTime.getHours().toString().padStart(2, "0");
+      const minutes = selectedTime.getMinutes().toString().padStart(2, "0");
+      setHour(`${hours}:${minutes}`);
+    }
+  }
+
+  const modalConfig =
+    selectedOption === "YES"
+      ? {
+          title: "Continue assim!",
+          subtitle: "Você continua dentro da dieta. Muito bem!",
+          svgComponent: <Ilustration />,
+          colorTitle: colors.greenDark,
+        }
+      : selectedOption === "NO"
+      ? {
+          title: "Que pena!",
+          subtitle:
+            "Você saiu da dieta dessa vez, mas continue se esforçando e não desista!",
+          svgComponent: <IlustrationTwo />,
+          colorTitle: colors.redDark,
+        }
+      : null;
 
   useEffect(() => {
     async function fetchMeal() {
@@ -119,6 +138,7 @@ export default function mealEdit() {
 
     fetchMeal();
   }, [id]);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -161,14 +181,18 @@ export default function mealEdit() {
                 onChangeText={setDate}
               />
             </View>
-            <View style={{ flex: 1, marginLeft: 8 }}>
+
+            <Pressable
+              onPress={() => setShowHourPicker(true)}
+              style={{ flex: 1, marginLeft: 8 }}
+            >
               <Input
                 title="Hora"
-                returnKeyType="done"
+                editable={false}
+                pointerEvents="none"
                 value={hour}
-                onChangeText={setHour}
               />
-            </View>
+            </Pressable>
           </View>
         </View>
 
@@ -211,6 +235,16 @@ export default function mealEdit() {
           subtitle={modalConfig.subtitle}
           svgComponent={modalConfig.svgComponent}
           colorTitle={modalConfig.colorTitle}
+        />
+      )}
+
+      {showHourPicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleTimeChange}
         />
       )}
     </View>

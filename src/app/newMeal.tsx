@@ -7,7 +7,16 @@ import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
 import { useState } from "react";
-import { Alert, StatusBar, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Pressable,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
@@ -24,6 +33,7 @@ export default function NewMeal() {
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(getCurrentDate());
   const [hour, setHour] = useState("");
+  const [showHourPicker, setShowHourPicker] = useState(false);
 
   const database = useMealDatabase();
 
@@ -59,6 +69,15 @@ export default function NewMeal() {
   function handleNavigateHome() {
     setIsModalVisible(false);
     router.navigate("/");
+  }
+
+  function handleTimeChange(event: any, selectedTime?: Date) {
+    setShowHourPicker(Platform.OS === "ios"); // Fica aberto no iOS
+    if (selectedTime) {
+      const hours = selectedTime.getHours().toString().padStart(2, "0");
+      const minutes = selectedTime.getMinutes().toString().padStart(2, "0");
+      setHour(`${hours}:${minutes}`);
+    }
   }
 
   const modalConfig =
@@ -121,14 +140,18 @@ export default function NewMeal() {
                 value={date}
               />
             </View>
-            <View style={{ flex: 1, marginLeft: 8 }}>
+
+            <Pressable
+              onPress={() => setShowHourPicker(true)}
+              style={{ flex: 1, marginLeft: 8 }}
+            >
               <Input
                 title="Hora"
-                returnKeyType="done"
-                onChangeText={setHour}
+                editable={false}
+                pointerEvents="none"
                 value={hour}
               />
-            </View>
+            </Pressable>
           </View>
         </View>
 
@@ -171,6 +194,16 @@ export default function NewMeal() {
           subtitle={modalConfig.subtitle}
           svgComponent={modalConfig.svgComponent}
           colorTitle={modalConfig.colorTitle}
+        />
+      )}
+
+      {showHourPicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleTimeChange}
         />
       )}
     </View>
