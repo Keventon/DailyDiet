@@ -17,6 +17,7 @@ import {
   Pressable,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { format } from "date-fns";
 import { router } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
@@ -34,6 +35,7 @@ export default function NewMeal() {
   const [date, setDate] = useState(getCurrentDate());
   const [hour, setHour] = useState("");
   const [showHourPicker, setShowHourPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const database = useMealDatabase();
 
@@ -72,11 +74,19 @@ export default function NewMeal() {
   }
 
   function handleTimeChange(event: any, selectedTime?: Date) {
-    setShowHourPicker(Platform.OS === "ios"); // Fica aberto no iOS
+    setShowHourPicker(Platform.OS === "ios");
     if (selectedTime) {
       const hours = selectedTime.getHours().toString().padStart(2, "0");
       const minutes = selectedTime.getMinutes().toString().padStart(2, "0");
       setHour(`${hours}:${minutes}`);
+    }
+  }
+
+  function handleDateChange(event: any, selectedDate?: Date) {
+    setShowDatePicker(Platform.OS === "ios");
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, "dd/MM/yyyy");
+      setDate(formattedDate);
     }
   }
 
@@ -132,14 +142,17 @@ export default function NewMeal() {
           />
 
           <View style={styles.dateTimeRow}>
-            <View style={{ flex: 1, marginRight: 8 }}>
+            <Pressable
+              onPress={() => setShowDatePicker(true)}
+              style={{ flex: 1, marginRight: 8 }}
+            >
               <Input
                 title="Data"
-                returnKeyType="next"
-                onChangeText={setDate}
+                editable={false}
+                pointerEvents="none"
                 value={date}
               />
-            </View>
+            </Pressable>
 
             <Pressable
               onPress={() => setShowHourPicker(true)}
@@ -204,6 +217,15 @@ export default function NewMeal() {
           is24Hour={true}
           display="default"
           onChange={handleTimeChange}
+        />
+      )}
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
         />
       )}
     </View>

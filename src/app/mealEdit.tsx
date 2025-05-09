@@ -17,6 +17,7 @@ import {
   Pressable,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { format, parse } from "date-fns";
 import { router, useLocalSearchParams } from "expo-router";
 
 import Ilustration from "@/assets/illustration.svg";
@@ -35,6 +36,7 @@ export default function mealEdit() {
   const [date, setDate] = useState("");
   const [hour, setHour] = useState("");
   const [showHourPicker, setShowHourPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const database = useMealDatabase();
 
@@ -89,6 +91,14 @@ export default function mealEdit() {
     }
   }
 
+  function handleDateChange(event: any, selectedDate?: Date) {
+    setShowDatePicker(Platform.OS === "ios");
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, "dd/MM/yyyy");
+      setDate(formattedDate);
+    }
+  }
+
   const modalConfig =
     selectedOption === "YES"
       ? {
@@ -119,8 +129,7 @@ export default function mealEdit() {
         const result = await database.findById(Number(id));
         if (result.isSuccessful && result.meal) {
           setMeal(result.meal);
-          selectedOption === null &&
-            setSelectedOption(result.meal.status === 1 ? "YES" : "NO");
+          setSelectedOption(result.meal.status === 1 ? "YES" : "NO");
           setName(result.meal.name);
           setDescription(result.meal.description);
           setDate(result.meal.date);
@@ -173,14 +182,17 @@ export default function mealEdit() {
           />
 
           <View style={styles.dateTimeRow}>
-            <View style={{ flex: 1, marginRight: 8 }}>
+            <Pressable
+              onPress={() => setShowDatePicker(true)}
+              style={{ flex: 1, marginRight: 8 }}
+            >
               <Input
                 title="Data"
-                returnKeyType="next"
+                editable={false}
+                pointerEvents="none"
                 value={date}
-                onChangeText={setDate}
               />
-            </View>
+            </Pressable>
 
             <Pressable
               onPress={() => setShowHourPicker(true)}
@@ -245,6 +257,15 @@ export default function mealEdit() {
           is24Hour={true}
           display="default"
           onChange={handleTimeChange}
+        />
+      )}
+
+      {showDatePicker && (
+        <DateTimePicker
+          value={new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
         />
       )}
     </View>
