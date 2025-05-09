@@ -12,9 +12,15 @@ import { toPercentage } from "@/utils/toPercentage";
 type Props = TouchableOpacityProps & {
   percent: number;
   backgroundColor?: string;
+  status?: boolean;
 };
 
-export function Statistic({ percent, backgroundColor, ...rest }: Props) {
+export function Statistic({
+  percent,
+  backgroundColor,
+  status,
+  ...rest
+}: Props) {
   return (
     <TouchableOpacity
       style={[styles.contentStatistics, { backgroundColor: backgroundColor }]}
@@ -22,7 +28,7 @@ export function Statistic({ percent, backgroundColor, ...rest }: Props) {
       {...rest}
     >
       <View style={styles.iconStatistics}>
-        {percent > 50 ? (
+        {status ? (
           <Open width={24} height={24} />
         ) : (
           <OpenRed width={24} height={24} />
@@ -31,7 +37,9 @@ export function Statistic({ percent, backgroundColor, ...rest }: Props) {
       <View style={styles.contentPercent}>
         <Text style={styles.titleStatistics}>{toPercentage(percent)}</Text>
         <Text style={styles.subtitleStatistics}>
-          das refeições dentro da dieta
+          {status
+            ? "das refeições dentro da dieta"
+            : "das refeições fora da dieta"}
         </Text>
       </View>
     </TouchableOpacity>

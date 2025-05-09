@@ -48,6 +48,44 @@ export function useMealDatabase() {
     }
   }
 
+  async function findById(id: number): Promise<{
+    isSuccessful: boolean;
+    meal: MealDatabase | null;
+    error?: unknown;
+  }> {
+    try {
+      const query = "SELECT * FROM meals WHERE id = $id";
+      const result = await database.getFirstAsync<MealDatabase>(query, {
+        $id: id,
+      });
+      if (result) {
+        return { isSuccessful: true, meal: result };
+      }
+      return {
+        isSuccessful: false,
+        meal: null,
+        error: "Refeição não encontrada",
+      };
+    } catch (error) {
+      return { isSuccessful: false, meal: null, error };
+    }
+  }
+
+  async function deleteById(id: number): Promise<{
+    isSuccessful: boolean;
+    error?: unknown;
+  }> {
+    try {
+      const statement = await database.prepareAsync(
+        "DELETE FROM meals WHERE id = $id"
+      );
+      await statement.executeAsync({ $id: id });
+      return { isSuccessful: true };
+    } catch (error) {
+      return { isSuccessful: false, error };
+    }
+  }
+
   async function getDietPercentage(): Promise<{
     isSuccessful: boolean;
     percentage: number;
@@ -67,16 +105,43 @@ export function useMealDatabase() {
       const dietMeals = meals.filter((meal) => meal.status === 1).length;
       const percentage = (dietMeals / meals.length) * 100;
 
-      const formattedPercentage =
-        Math.floor(percentage) === percentage
-          ? Math.floor(percentage)
-          : Number(percentage.toFixed(2));
-
-      return { isSuccessful: true, percentage: formattedPercentage };
+      return { isSuccessful: true, percentage: percentage };
     } catch (error) {
       return { isSuccessful: false, percentage: 0, error };
     }
   }
 
-  return { create, getAll, getDietPercentage };
+  async function getNoDietPercentage(): Promise<{
+    isSuccessful: boolean;
+    percentage: number;
+    error?: unknown;
+  }> {
+    try {
+      const result = await getAll();
+      if (!result.isSuccessful) {
+        return { isSuccessful: false, percentage: 0, error: result.error };
+      }
+
+      const meals = result.meals;
+      if (meals.length === 0) {
+        return { isSuccessful: true, percentage: 0 };
+      }
+
+      const dietMeals = meals.filter((meal) => meal.status === 0).length;
+      const percentage = (dietMeals / meals.length) * 100;
+
+      return { isSuccessful: true, percentage: percentage };
+    } catch (error) {
+      return { isSuccessful: false, percentage: 0, error };
+    }
+  }
+
+  return {
+    create,
+    getAll,
+    findById,
+    deleteById,
+    getDietPercentage,
+    getNoDietPercentage,
+  };
 }

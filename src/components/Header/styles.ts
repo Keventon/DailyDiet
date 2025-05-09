@@ -1,7 +1,7 @@
 import { colors } from "@/types/colors";
 import { fontFamily } from "@/types/fontFamily";
 import { sizes } from "@/types/sizes";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -40,6 +40,7 @@ export const styles = StyleSheet.create({
     marginRight: 24,
   },
   containerTitle: {
+    marginTop: Platform.OS === "ios" ? 0 : -8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",

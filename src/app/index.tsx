@@ -2,6 +2,7 @@ import { colors } from "@/types/colors";
 import {
   Alert,
   Image,
+  Platform,
   SectionList,
   StatusBar,
   StyleSheet,
@@ -13,9 +14,9 @@ import { fontFamily } from "@/types/fontFamily";
 import { Button } from "@/components/Button";
 import { Meal } from "@/components/Meal";
 import { Statistic } from "@/components/Statistic";
-import { router } from "expo-router";
+import { Href, router, useFocusEffect } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MealDatabase, useMealDatabase } from "@/database/meal/useMealDatabase";
 
 type MealSection = {
@@ -27,11 +28,14 @@ export default function Home() {
   const [meals, setMeals] = useState<MealDatabase[]>([]);
   const [sections, setSections] = useState<MealSection[]>([]);
   const [dietPercentage, setDietPercentage] = useState<number>(0);
+  const [status, setStatus] = useState(false);
   const database = useMealDatabase();
 
   function handleScreenStatisticsDetails() {
     router.navigate("/statisticsDetails");
   }
+
+  function getPercentage() {}
 
   async function fetchMeals() {
     try {
@@ -60,9 +64,20 @@ export default function Home() {
         Alert.alert("Erro", "Erro ao carregar refeições");
       }
 
-      const percentageResult = await database.getDietPercentage();
-      if (percentageResult.isSuccessful) {
-        setDietPercentage(percentageResult.percentage);
+      const percentageDiet = await database.getDietPercentage();
+      const percentageNoDiet = await database.getNoDietPercentage();
+
+      if (percentageDiet.isSuccessful && percentageNoDiet.isSuccessful) {
+        if (
+          percentageDiet.percentage > percentageNoDiet.percentage ||
+          percentageDiet.percentage > 0
+        ) {
+          setDietPercentage(percentageDiet.percentage);
+          setStatus(true);
+        } else {
+          setDietPercentage(percentageNoDiet.percentage);
+          setStatus(false);
+        }
       } else {
         setDietPercentage(0);
         Alert.alert("Erro", "Erro ao calcular estatísticas");
@@ -73,9 +88,9 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
+  useFocusEffect(() => {
     fetchMeals();
-  }, []);
+  });
 
   return (
     <View style={styles.container}>
@@ -93,10 +108,9 @@ export default function Home() {
       </View>
 
       <Statistic
-        backgroundColor={
-          dietPercentage >= 50 ? colors.greenLight : colors.redLight
-        }
+        backgroundColor={status ? colors.greenLight : colors.redLight}
         percent={dietPercentage}
+        status={status}
         onPress={handleScreenStatisticsDetails}
       />
 
@@ -121,7 +135,7 @@ export default function Home() {
             hour={item.hour}
             nameMeal={item.name}
             status={!!item.status}
-            onPress={() => router.navigate("/mealDetails")}
+            onPress={() => router.navigate(`/details/${item.id}` as Href)}
           />
         )}
         renderSectionHeader={({ section: { date } }) => (
@@ -142,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   header: {
-    marginTop: 60,
+    marginTop: Platform.OS === "ios" ? 56 : 48,
     marginLeft: 24,
     marginRight: 24,
     alignItems: "center",
