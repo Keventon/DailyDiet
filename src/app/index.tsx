@@ -69,7 +69,7 @@ export default function Home() {
 
       if (percentageDiet.isSuccessful && percentageNoDiet.isSuccessful) {
         if (
-          percentageDiet.percentage > percentageNoDiet.percentage ||
+          percentageDiet.percentage > percentageNoDiet.percentage &&
           percentageDiet.percentage > 0
         ) {
           setDietPercentage(percentageDiet.percentage);

@@ -15,6 +15,7 @@ export default function StatisticsDetails() {
   const [meals, setMeals] = useState<MealDatabase[]>([]);
   const [dietPercentage, setDietPercentage] = useState(0);
   const [status, setStatus] = useState(false);
+  const [bestStreak, setBestStreak] = useState(0);
 
   async function getAllMeals() {
     const response = await database.getAll();
@@ -44,7 +45,7 @@ export default function StatisticsDetails() {
 
       if (percentageDiet.isSuccessful && percentageNoDiet.isSuccessful) {
         if (
-          percentageDiet.percentage > percentageNoDiet.percentage ||
+          percentageDiet.percentage > percentageNoDiet.percentage &&
           percentageDiet.percentage > 0
         ) {
           setDietPercentage(percentageDiet.percentage);
@@ -56,6 +57,12 @@ export default function StatisticsDetails() {
       } else {
         setDietPercentage(0);
         Alert.alert("Erro", "Erro ao calcular estatísticas");
+      }
+
+      // ✅ Melhor sequência de refeições dentro da dieta
+      const streakResult = await database.getBestDietStreak();
+      if (streakResult.isSuccessful) {
+        setBestStreak(streakResult.bestStreak);
       }
     } catch (error) {
       Alert.alert("Erro", "Erro ao processar dados");
@@ -85,7 +92,7 @@ export default function StatisticsDetails() {
   return (
     <View style={styles.container}>
       <StatusBar
-        backgroundColor={colors.greenLight}
+        backgroundColor={status ? colors.greenLight : colors.redLight}
         barStyle="dark-content"
         translucent
       />
@@ -103,7 +110,7 @@ export default function StatisticsDetails() {
 
         <View style={styles.statistics}>
           <StatisticRectangule
-            quantityMealsDiet={22}
+            quantityMealsDiet={bestStreak}
             subtitle="melhor sequência de pratos dentro da dieta"
           />
           <StatisticRectangule

@@ -155,6 +155,41 @@ export function useMealDatabase() {
     }
   }
 
+  async function getBestDietStreak(): Promise<{
+    isSuccessful: boolean;
+    bestStreak: number;
+    error?: unknown;
+  }> {
+    try {
+      const result = await getAll();
+      if (!result.isSuccessful) {
+        return { isSuccessful: false, bestStreak: 0, error: result.error };
+      }
+
+      const meals = result.meals.sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.hour}`);
+        const dateB = new Date(`${b.date}T${b.hour}`);
+        return dateA.getTime() - dateB.getTime();
+      });
+
+      let bestStreak = 0;
+      let currentStreak = 0;
+
+      for (const meal of meals) {
+        if (meal.status === 1) {
+          currentStreak += 1;
+          bestStreak = Math.max(bestStreak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      }
+
+      return { isSuccessful: true, bestStreak };
+    } catch (error) {
+      return { isSuccessful: false, bestStreak: 0, error };
+    }
+  }
+
   return {
     create,
     getAll,
@@ -163,5 +198,6 @@ export function useMealDatabase() {
     update,
     getDietPercentage,
     getNoDietPercentage,
+    getBestDietStreak,
   };
 }
