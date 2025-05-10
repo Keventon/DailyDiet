@@ -14,6 +14,7 @@ type Props = {
   isPercent?: boolean;
   height?: number;
   title?: string;
+  status?: boolean;
 };
 
 export function Header({
@@ -22,6 +23,7 @@ export function Header({
   backgroundIcon,
   isPercent,
   height,
+  status,
   title,
 }: Props) {
   return (
@@ -43,7 +45,9 @@ export function Header({
           <View style={styles.contentPercent}>
             <Text style={styles.titleStatistics}>{toPercentage(percent)}</Text>
             <Text style={styles.subtitleStatistics}>
-              das refeições dentro da dieta
+              {status
+                ? "das refeições dentro da dieta"
+                : "das refeições fora da dieta"}
             </Text>
           </View>
         </View>
