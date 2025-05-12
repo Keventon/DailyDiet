@@ -70,7 +70,7 @@ export default function NewMeal() {
 
   function handleNavigateHome() {
     setIsModalVisible(false);
-    router.navigate("/");
+    router.push("/");
   }
 
   function handleTimeChange(event: any, selectedTime?: Date) {

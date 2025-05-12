@@ -5,7 +5,7 @@ import {
   NunitoSans_700Bold,
 } from "@expo-google-fonts/nunito-sans";
 import { Loading } from "@/components/Loading";
-import { SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
+import { SQLiteProvider } from "expo-sqlite";
 import { initializeDatabase } from "@/database/initializeDatabase";
 
 export default function Layout() {

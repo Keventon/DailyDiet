@@ -52,7 +52,7 @@ export default function mealEdit() {
 
   function handleNavigateHome() {
     setIsModalVisible(false);
-    router.navigate("/");
+    router.push("/");
   }
 
   function handleUpdateMealDatabase() {

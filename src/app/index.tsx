@@ -1,6 +1,7 @@
 import { colors } from "@/types/colors";
 import {
   Alert,
+  BackHandler,
   Image,
   Platform,
   SectionList,
@@ -16,7 +17,7 @@ import { Meal } from "@/components/Meal";
 import { Statistic } from "@/components/Statistic";
 import { Href, router, useFocusEffect } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MealDatabase, useMealDatabase } from "@/database/meal/useMealDatabase";
 import { Loading } from "@/components/Loading";
 
@@ -88,9 +89,29 @@ export default function Home() {
     }
   }
 
-  useFocusEffect(() => {
-    fetchMeals();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (Platform.OS === "android") {
+          BackHandler.exitApp();
+          return true;
+        }
+        return false;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [])
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMeals();
+    }, [])
+  );
 
   if (loading) {
     return <Loading />;
