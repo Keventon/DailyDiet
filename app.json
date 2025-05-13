@@ -33,7 +33,11 @@
       "output": "static",
       "favicon": "./assets/images/logo.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-sqlite"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-sqlite"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -42,14 +46,11 @@
         "origin": false
       },
       "eas": {
-        "projectId": "7f2819ab-df5d-43cd-a1d5-726f0e007987"
+        "projectId": "92f8be6b-1bd5-4eeb-8b25-b9a4b472969c"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/7f2819ab-df5d-43cd-a1d5-726f0e007987"
     }
   }
 }
